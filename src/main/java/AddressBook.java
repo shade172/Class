@@ -1,9 +1,16 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class AddressBook {
+interface AddressBooks {
+    HashMap<String, Address> getAdds();
+    boolean addPersonAddress(String surname, Address address);
+    boolean deletePerson(String surname);
+    boolean changePerson(String surname, Address address);
+    Address getAddress(String surname);
+    List<String> getListPersonStreet(String street);
+    List<String> getListPersonStreetAndHouse(String street, int house);
+}
+
+public class AddressBook implements AddressBooks {
 
 /**
  Адресная книга.
@@ -24,27 +31,25 @@ public class AddressBook {
     }
 
     public boolean addPersonAddress(String surname, Address address) {
-        if (surname == null || surname.length() == 0) return false;
+        if (exception(surname)) return false;
         adds.put(surname, address);
         return true;
     }
 
     public boolean deletePerson(String surname) {
-        if (surname == null || surname.length() == 0) return false;
+        if (exception(surname)) return false;
         adds.remove(surname);
         return true;
     }
 
     public boolean changePerson(String surname, Address address) {
-        if (surname == null || surname.length() == 0) return false;
+        if (exception(surname)) return false;
         adds.put(surname, address);
         return true;
     }
 
-    public boolean getAddress(String surname) {
-        if (surname == null || surname.length() == 0) return false;
-        adds.get(surname);
-        return true;
+    public Address getAddress(String surname) {
+        return adds.get(surname);
     }
 
     public List<String> getListPersonStreet(String street) {
@@ -64,6 +69,30 @@ public class AddressBook {
             if (address.getStreet().equals(street) && numberHouse == house) listPersonStreet.add(entry.getKey());
         }
         return listPersonStreet;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Address)) return false;
+        AddressBook that = (AddressBook) obj;
+        return adds.equals(that.adds);
+    }
+
+    @Override
+    public int hashCode() {
+        return adds.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "AddressBook{" +
+                "adds=" + adds +
+                '}';
+    }
+
+    private boolean exception(String surname) {
+        return surname == null || surname.length() == 0;
     }
 }
 

@@ -30,6 +30,9 @@ class AddressBookTest {
         assertTrue(mainList.addPersonAddress("Сергеев", listOne));
         assertFalse(mainList.addPersonAddress("", listOne));
         assertEquals(expectedList.entrySet(), mainList.getAdds().entrySet());
+        assertThrows(IllegalArgumentException.class, () -> listOne.setHouse(-10));
+        assertThrows(IllegalArgumentException.class, () -> listTwo.setFlat(-252));
+        assertThrows(IllegalArgumentException.class, () -> listThree.setStreet(null));
     }
 
     @Test
@@ -64,8 +67,8 @@ class AddressBookTest {
 
     @Test
     void getAddress() {
-        mainList.addPersonAddress("Сергеев", listOne);
-        assertEquals(new Address("30 лет победы", 43, 17), mainList.getAddress("Сергеев"));
+        mainList.addPersonAddress("Сергеев", new Address("30 лет победы", 43, 17));
+        assertEquals(listOne, mainList.getAddress("Сергеев"));
     }
 
     @Test
@@ -83,5 +86,30 @@ class AddressBookTest {
         mainList.addPersonAddress("Сергеев", new Address("Ленинский проспект", 86, 478));
         mainList.addPersonAddress("Данилов", new Address("Ленинский проспект", 40, 39));
         assertEquals(expectedListT, mainList.getListPersonStreetAndHouse("Ленинский проспект", 86));
+    }
+
+    @Test
+    void testEquals() {
+        AddressBook addsOne = new AddressBook();
+        AddressBook addsTwo = new AddressBook();
+        addsOne.addPersonAddress("Сергеев", new Address("30 лет победы", 43, 17));
+        addsTwo.addPersonAddress("Сергеев", new Address("30 лет победы", 43, 17));
+        assertEquals(addsOne.getAdds().entrySet(), addsTwo.getAdds().entrySet());
+    }
+
+    @Test
+    void testHashCode() {
+        AddressBook addsOne = new AddressBook();
+        AddressBook addsTwo = new AddressBook();
+        addsOne.addPersonAddress("Сергеев", new Address("30 лет победы", 43, 17));
+        addsTwo.addPersonAddress("Сергеев", new Address("30 лет победы", 43, 17));
+        assertEquals(addsOne.hashCode(), addsTwo.hashCode());
+    }
+
+    @Test
+    void testToString() {
+        AddressBook adds = new AddressBook();
+        adds.addPersonAddress("Сергеев", new Address("30 лет победы", 43, 17));
+        assertEquals("AddressBook{adds={Сергеев=Address{street=30 лет победы, house=43, flat=17}}}", adds.toString());
     }
 }

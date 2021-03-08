@@ -45,7 +45,7 @@ public class Address implements AddressAll {
 
     public int setFlat(int newFlat) {
         if (newFlat <= 0) throw new IllegalArgumentException("Номер такой квартиры не существует");
-        int result = house;
+        int result = flat;
         this.flat = newFlat;
         return result;
     }
